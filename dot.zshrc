@@ -109,6 +109,9 @@ freebsd*|darwin*)
 linux*)
     alias ls="ls --color=auto"
     ;;
+cygwin*)
+    alias ls='ls -F --show-control-chars --color=auto'
+    ;;
 esac
 
 # Common alias.
