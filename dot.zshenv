@@ -5,10 +5,8 @@
 # LANG.
 # =====
 export LANG=ja_JP.UTF-8
-# for Cygwin
-if [ $OS = "Windows_NT" ]; then
+if [ ${OSTYPE} = "cygwin" ]; then
   export LANG=ja_JP.Shift_JIS;
-  alias ls='ls -F --show-control-chars'
 fi
 
 # PATH, MANPATH, INFOPATH, LD_LIBRARY_PATH.
