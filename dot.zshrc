@@ -20,8 +20,8 @@ zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
 bindkey "^p" history-beginning-search-backward-end
 bindkey "^n" history-beginning-search-forward-end
-bindkey "¥¥ep" history-beginning-search-backward-end
-bindkey "¥¥en" history-beginning-search-forward-end
+bindkey "\\ep" history-beginning-search-backward-end
+bindkey "\\en" history-beginning-search-forward-end
 
 
 # Prompt configuration.
@@ -72,14 +72,14 @@ setopt correct # command correct edition before each completion attempt
 setopt list_packed # compacked complete list display
 setopt noautoremoveslash # no remove postfix slash of command line
 setopt nolistbeep # no beep sound when complete list displayed
-setopt nopromptcr # print last line without linefeed(¥n)
+setopt nopromptcr # print last line without linefeed(\n)
 
 
 # Completion configuration.
 # -------------------------
 fpath=(~/.zsh/functions/Completion ${fpath})
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
-autoload -U compinit; compinit
+autoload -U compinit; compinit -u
 
 # Prediction configuration
 #autoload predict-on
@@ -161,7 +161,7 @@ cons25)
     unset LANG
     export LSCOLORS=ExFxCxdxBxegedabagacad
     export LS_COLORS='di=01;34:ln=01;35:so=01;32:ex=01;31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
-#    zstyle ':completion:*' list-colors ¥
+#    zstyle ':completion:*' list-colors \
 #        'di=;34;1' 'ln=;35;1' 'so=;32;1' 'ex=31;1' 'bd=46;34' 'cd=43;34'
     ;;
 esac
@@ -175,7 +175,7 @@ kterm*|xterm*)
     }
     export LSCOLORS=exfxcxdxbxegedabagacad
     export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
-#    zstyle ':completion:*' list-colors ¥
+#    zstyle ':completion:*' list-colors \
 #        'di=34' 'ln=35' 'so=32' 'ex=31' 'bd=46;34' 'cd=43;34'
     ;;
 esac
