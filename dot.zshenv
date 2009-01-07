@@ -5,6 +5,11 @@
 # LANG.
 # =====
 export LANG=ja_JP.UTF-8
+# for Cygwin
+if [ $OS = "Windows_NT" ]; then
+  export LANG=ja_JP.Shift_JIS;
+  alias ls='ls -F --show-control-chars'
+fi
 
 # PATH, MANPATH, INFOPATH, LD_LIBRARY_PATH.
 # =========================================
@@ -30,6 +35,20 @@ if [ "${PATH/$HOME/}" = "$PATH" ] ; then # if $HOME/bin is not in $PATH ...
   if [ -d "$HOME/man" ]; then MANPATH="$HOME/man:$MANPATH"; fi
   if [ -d "$HOME/share/man" ]; then MANPATH="$HOME/share/man:$MANPATH"; fi
   if [ -d "$HOME/info" ]; then INFOPATH="$HOME/info:$INFOPATH"; fi
+
+  # for my own src tree
+  if [ -d "$HOME/local/bin" ]; then PATH="$HOME/local/bin:$PATH"; fi
+  if [ -d "$HOME/local/man" ]; then MANPATH="$HOME/local/man:$MANPATH"; fi
+  if [ -d "$HOME/local/share/man" ]; then MANPATH="$HOME/local/share/man:$MANPATH"; fi
+  if [ -d "$HOME/local/info" ]; then INFOPATH="$HOME/local/info:$INFOPATH"; fi
+
+  # for NTEmacs
+  if [ -d "/usr/local/emacs/22.2" ]; then PATH="/usr/local/emacs/22.2/bin:$PATH"; fi
+
+  # for Rubygem
+  if which gem &>/dev/null; then
+    PATH="$PATH:$(gem environment gempath)/bin"
+  fi
 fi
 export PATH MANPATH INFOPATH LD_LIBRARY_PATH
 
