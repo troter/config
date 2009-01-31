@@ -54,31 +54,46 @@
 (defun setup-language-environment-unix ()
   (cond ((equal (getenv "LANG") "ja_JP.UTF-8")
          (setup-coding-system 'utf-8))
-        (else
+        ((equal (getenv "LANG") "ja_JP.EUC-JP")
          (setup-coding-system 'euc-jp))))
 (defun setup-language-environment-windows ()
-  (setup-coding-system 'shift-jis))
+  (setup-coding-system 'sjis))
 
 (progn
   (if (< emacs-major-version 22)
       (require 'un-define))
   (cond ((not (windows-ntp))
          (setup-language-environment-unix))
-        (else
+        (t
          (setup-language-environment-windows))))
 
 
 ;;;============================================================
 ;;; input method
 (defun setup-input-method-ime ()
-  (mw32-ime-initialize)
   (setq default-input-method "MW32-IME")
   (setq-default mw32-ime-mode-line-state-indicator "[--]")
   (setq mw32-ime-mode-line-state-indicator-list '("[--]" "[あ]" "[--]"))
+  (mw32-ime-initialize)
+
+  (wrap-function-to-control-ime 'y-or-n-p nil nil)
+  (wrap-function-to-control-ime 'yes-or-no-p nil nil)
+  (wrap-function-to-control-ime 'universal-argument t nil)
+  (wrap-function-to-control-ime 'read-string nil nil)
+  (wrap-function-to-control-ime 'read-from-minibuffer nil nil)
+  (wrap-function-to-control-ime 'read-key-sequence nil nil)
+  (wrap-function-to-control-ime 'map-y-or-n-p nil nil)
+  (wrap-function-to-control-ime 'read-passwd t t) ; don't work as we expect.
+
   (add-hook 'mw32-ime-on-hook
-            (function (lambda () (set-cursor-height 2))))
+	    (function (lambda () (set-cursor-color "blue"))))
   (add-hook 'mw32-ime-off-hook
-            (function (lambda () (set-cursor-height 4))))
+	    (function (lambda () (set-cursor-color "black"))))
+  (add-hook 'minibuffer-setup-hook
+  	    (function (lambda ()
+  			(if (fep-get-mode)
+			    (set-cursor-color "blue")
+			  (set-cursor-color "black")))))
   )
 (defun setup-input-method-anthy ()
   ;; Anthy
@@ -98,16 +113,18 @@
 ;;;============================================================
 ;;; font
 (defun setup-font-windows ()
-  (create-fontset-from-request "private-fontset"
-                               '((width . 8)
-                                 (height . 16)
-                                 (fixed . t)
-                                 (italic . nil))
-                               '((family . "さざなみゴシック")
-                                 (family . "Courier New")))
-  (setq default-frame-alist
-        (append (list '(font . "private-fontset"))
-                default-frame-alist)))
+  (setq w32-use-w32-font-dialog nil)
+  (setq scalable-fonts-allowed t)
+  (setq w32-enable-synthesized-fonts t)
+  (create-fontset-from-fontset-spec
+   "-*-Courier New-normal-r-*-*-12-*-*-*-c-*-fontset-TTG12c,
+ japanese-jisx0208:-*-ＭＳ ゴシック-*-*-*-*-*-*-*-*-*-*-jisx0208-sjis,
+ latin-jisx0201:-*-ＭＳ ゴシック-*-*-*-*-*-*-*-*-*-*-jisx0208-sjis,
+ katakana-jisx0201:-*-ＭＳ ゴシック-*-*-*-*-*-*-*-*-*-*-jisx0208-sjis,
+ mule-unicode-e000-ffff:-*-ＭＳ ゴシック-*-*-*-*-*-*-*-*-*-*-iso10646-1" t)
+  (setcdr (assoc 'font default-frame-alist) "fontset-default")
+  (set-frame-font "fontset-default")
+  )
 (defun setup-font-others ())
 (defun setup-font-others-window-system ()
   ;;(set-default-font "-*-fixed-medium-r-normal--14-*-*-*-*-*-*-*")
@@ -171,7 +188,7 @@
                  '(cursor-color . "black")
                  ;;'(ime-font . "Nihongo-12") ; TrueType のみ
                  ;;'(font . "bdf-fontset")    ; BDF
-                 '(font . "private-fontset"); TrueType
+                 ;'(font . "private-fontset"); TrueType
                  '(width . 80)
                  '(height . 38)
                  '(top . 100)
