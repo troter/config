@@ -39,6 +39,9 @@ if [ "${PATH/$HOME/}" = "$PATH" ] ; then # if $HOME/bin is not in $PATH ...
   if [ -d "$HOME/local/man" ]; then MANPATH="$HOME/local/man:$MANPATH"; fi
   if [ -d "$HOME/local/share/man" ]; then MANPATH="$HOME/local/share/man:$MANPATH"; fi
   if [ -d "$HOME/local/info" ]; then INFOPATH="$HOME/local/info:$INFOPATH"; fi
+  
+  # for PEAR
+  if [ -d "$HOME/local/php/bin" ]; then PATH="$HOME/local/php/bin:$PATH"; fi
 
   # for NTEmacs
   if [ -d "/usr/local/emacs/22.2" ]; then PATH="/usr/local/emacs/22.2/bin:$PATH"; fi
