@@ -376,6 +376,17 @@
   (setq dired-actual-switches
 	(dired-replace-in-string "h" "" dired-actual-switches)))
 
+;;; elscreen
+(setq elscreen-prefix-key "\C-z")
+(setq elscreen-display-tab nil)
+(load "elscreen")
+(add-hook 'term-mode-hook '(lambda ()
+                             (define-key term-raw-map "\C-z"
+                               (lookup-key (current-global-map) "\C-z"))
+			     (define-key term-raw-map "\C-p" 'previous-line)
+			     (define-key term-raw-map "\C-n" 'next-line)
+			     (term-set-escape-char ?\C-x)))
+
 
 ;;;============================================================
 ;;; programming major modes
