@@ -11,7 +11,7 @@ INSTALL_ELISP_EL_URL=http://www.emacswiki.org/cgi-bin/wiki/download/install-elis
 YASNIPPET_URL=http://yasnippet.googlecode.com/files/yasnippet-0.5.9.tar.bz2
 
 ELISP_URLS= http://stud4.tuwien.ac.at/~e0225855/linum/linum.el \
- http://tiny-tools.cvs.sourceforge.net/*checkout*/tiny-tools/tiny-tools/lisp/other/folding.el
+ http://tiny-tools.cvs.sourceforge.net/*checkout*/tiny-tools/tiny-tools/lisp/other/folding.el \
  http://svn.coderepos.org/share/lang/elisp/anything-c-yasnippet/anything-c-yasnippet.el
 EMACSWIKI_ELISP_NAME= auto-complete.el anything.el anything-config.el 
 
@@ -69,19 +69,19 @@ all:
 
 install: install.dot.zshenv install.dot.zshrc install.dot.screenrc install.dot.inputrc install.dot.emacs.el install.dot.emacs.d
 
-install.dot.zshenv: dot.zshenv
+install.dot.zshenv:
 	cp dot.zshenv $(HOME)/.zshenv
 
-install.dot.zshrc: dot.zshrc
+install.dot.zshrc:
 	cp dot.zshrc $(HOME)/.zshrc
 
-install.dot.screenrc: dot.screenrc
+install.dot.screenrc:
 	cp dot.screenrc $(HOME)/.screenrc
 
-install.dot.inputrc: dot.inputrc
+install.dot.inputrc:
 	cp dot.inputrc $(HOME)/.inputrc
 
-install.dot.emacs.el: dot.emacs.el
+install.dot.emacs.el:
 	cp dot.emacs.el $(HOME)/.emacs.el
 
 install.dot.emacs.d: dot.emacs.d
