@@ -10,7 +10,9 @@ EMACSWIKI_ELISP_NAME= auto-complete.el anything.el anything-config.el
 # TODO: --eval を生成してまとめて評価するように変更した方がいいかも
 #       anything.elとanything-config.elの絡みとか
 define install-elisp-base
-	$(EMACS) $(EMACS_BATCH_OPTION) --load $(INSTALL_ELISP_EL) \
+	$(EMACS) $(EMACS_BATCH_OPTION) \
+        --directory $(ELISP_DIR) \
+        --load $(INSTALL_ELISP_EL) \
 	--eval "(setq install-elisp-confirm-flag nil)" \
 	--eval "(setq install-elisp-repository-directory \"$(ELISP_DIR)\")" \
 	--eval "($(strip $1) \"$(strip $2)\")"
