@@ -34,7 +34,7 @@ if [ "${PATH/$HOME/}" = "$PATH" ] ; then # if $HOME/bin is not in $PATH ...
   if [ -d "$HOME/share/man" ]; then MANPATH="$HOME/share/man:$MANPATH"; fi
   if [ -d "$HOME/info" ]; then INFOPATH="$HOME/info:$INFOPATH"; fi
 
-  # for my own src tree
+  # for src install
   if [ -d "$HOME/local/bin" ]; then PATH="$HOME/local/bin:$PATH"; fi
   if [ -d "$HOME/local/man" ]; then MANPATH="$HOME/local/man:$MANPATH"; fi
   if [ -d "$HOME/local/share/man" ]; then MANPATH="$HOME/local/share/man:$MANPATH"; fi
