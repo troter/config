@@ -7,7 +7,7 @@
 
 # Misc.
 # -----
-umask 077
+umask 022
 ulimit -c 0
 
 # Keybind configuration.
