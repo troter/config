@@ -1,4 +1,4 @@
-# -*- mode:sh -*-
+# -*- coding:utf-8; mode:sh -*-
 # user generic .zshrc file for zsh(1).
 # ====================================
 
@@ -18,41 +18,43 @@ bindkey -e
 autoload history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
-bindkey "^p" history-beginning-search-backward-end
-bindkey "^n" history-beginning-search-forward-end
-bindkey "\\ep" history-beginning-search-backward-end
-bindkey "\\en" history-beginning-search-forward-end
+bindkey "^P" history-beginning-search-backward-end
+bindkey "^N" history-beginning-search-forward-end
 
 
 # Prompt configuration.
 # ---------------------
+# |[user@host:pwd(shlvl)]                      |
+# |%                              [date:number]|
+# |command is correct? [n,y,a,e]:              |
 setopt prompt_subst
-#unsetopt zle
+function prompt_setup() {
+    autoload -U colors; colors
+    local c_reset='%{${reset_color}%}'
+    local c_black='%{${fg[black]}%}'
+    local c_red='%{${fg[red]}%}'
+    local c_green='%{${fg[green]}%}'
+    local c_yellow='%{${fg[yellow]}%}'
+    local c_blue='%{${fg[blue]}%}'
+    local c_magenta='%{${fg[magenta]}%}'
+    local c_cyan='%{${fg[cyan]}%}'
+    local c_white='%{${fg[white]}%}'
 
-autoload -U colors; colors
-PROMPT_FG_CYAN='%{${fg[cyan]}%}'
-PROMPT_FG_WHITE='%{${fg[white]}%}'
-PROMPT_COLOR_RESET='%{${reset_color}%}'
-PROMPT="%#"
+    local c_prompt=$c_green
+    local c_user=$c_green
+    if [[ ${UID} = 0 ]] { c_user=$c_red }
 
-case ${UID} in
-0) # root
-    PROMPT="%B${WINDOW:+"[$WINDOW]"}${PROMPT_FG_CYAN}${PROMPT}${PROMPT_COLOR_RESET}%b "
-    PROMPT2="%B${PROMPT_FG_CYAN}%_%#${PROMPT_COLOR_RESET}%b "
-    RPROMPT="%B${PROMPT_FG_WHITE}%~${PROMPT_FG_CYAN}:${PROMPT_FG_WHITE}%!${PROMPT_COLOR_RESET}%b"
-    SPROMPT="%B${PROMPT_FG_CYAN}%r is correct? [n,y,a,e]:${PROMPT_FG_RESET}%b "
-    [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
-        PROMPT="${PROMPT_FG_CYAN}$(echo ${HOST%%.*} | tr '[a-z]' '[A-Z]') ${PROMPT}"
-    ;;
-*) # others
-    PROMPT="${WINDOW:+"[$WINDOW]"}${PROMPT_FG_CYAN}${PROMPT}${PROMPT_COLOR_RESET} "
-    PROMPT2="${PROMPT_FG_CYAN}%_%#${PROMPT_COLOR_RESET} "
-    RPROMPT="${PROMPT_FG_WHITE}%~${PROMPT_FG_CYAN}:${PROMPT_FG_WHITE}%!${PROMPT_COLOR_RESET}"
-    SPROMPT="${PROMPT_FG_CYAN}%r is correct? [n,y,a,e]:${PROMPT_COLOR_RESET} "
-    [ -n "${REMOTEHOST}${SSH_CONNECTION}" ] && 
-        PROMPT="${PROMPT_FG_CYAN}$(echo ${HOST%%.*} | tr '[a-z]' '[A-Z]') ${PROMPT}"
-    ;;
-esac
+    local shlevel="(\${SHLVL})"
+    if [[ ${SHLVL} < 2 ]] { shlevel='' }
+
+    PROMPT="[${c_user}%n${c_reset}@${c_green}%m${c_reset}:${c_cyan}%~${c_reset}${shlevel}]
+${c_prompt}%#${c_reset} "
+    PROMPT2="${c_prompt}%_>${c_reset} "
+    RPROMPT="[`date '+%y/%m/%d %H:%M:%S'`${c_cyan}:${c_reset}%h]"
+    SPROMPT="${c_magenta}%r is correct? [n,y,a,e]:${c_reset} "
+}
+prompt_setup
+unset -f prompt_setup
 
 
 # Command history configuration.
@@ -102,17 +104,9 @@ alias -g S="| sed"
 alias -g A="| awk"
 
 # ls colors
-case "${OSTYPE}" in
-freebsd*|darwin*)
-    alias ls="ls -G -w"
-    ;;
-linux*)
-    alias ls="ls --color=auto"
-    ;;
-cygwin*)
-    alias ls='ls -F --show-control-chars --color=auto'
-    ;;
-esac
+if [[ "${OSTYPE}" == (freebsd*|darwin*) ]] { alias ls="ls -G -w" }
+if [[ "${OSTYPE}" == (linux*)           ]] { alias ls="ls --color=auto"; }
+if [[ "${OSTYPE}" == (cygwin*)          ]] { alias ls='ls -F --show-control-chars --color=auto' }
 
 # Common alias.
 # -------------
@@ -173,9 +167,6 @@ esac
 # -----------------------------------------------
 case "${TERM}" in
 kterm*|xterm*)
-    precmd() {
-        echo "${USER}@${HOST%%.*}:${PWD}"
-    }
     export LSCOLORS=exfxcxdxbxegedabagacad
     export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
 #    zstyle ':completion:*' list-colors \
