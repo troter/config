@@ -1,5 +1,6 @@
 # .screenrc
 escape ^l^l
+term xterm-color
 defencoding utf-8
 defscrollback 3000
 
