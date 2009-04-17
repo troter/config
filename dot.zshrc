@@ -10,6 +10,16 @@
 umask 022
 ulimit -c 0
 
+# Misc Options.
+# -------------
+setopt auto_cd # auto change directory
+setopt auto_pushd # auto directory pushd that you can get dirs list by ce -[tab]
+setopt correct # command correct edition before each completion attempt
+setopt list_packed # compacked complete list display
+setopt noautoremoveslash # no remove postfix slash of command line
+setopt nolistbeep # no beep sound when complete list displayed
+setopt nopromptcr # print last line without linefeed(\n)
+
 # Keybind configuration.
 # ----------------------
 bindkey -e
@@ -20,7 +30,6 @@ zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
 bindkey "^P" history-beginning-search-backward-end
 bindkey "^N" history-beginning-search-forward-end
-
 
 # Prompt configuration.
 # ---------------------
@@ -53,9 +62,7 @@ ${c_prompt}%#${c_reset} "
     RPROMPT="[`date '+%y/%m/%d %H:%M:%S'`${c_cyan}:${c_reset}%h]"
     SPROMPT="${c_magenta}%r is correct? [n,y,a,e]:${c_reset} "
 }
-prompt_setup
-unset -f prompt_setup
-
+prompt_setup; unset -f prompt_setup
 
 # Command history configuration.
 # ------------------------------
@@ -65,28 +72,15 @@ SAVEHIST=1000000
 setopt hist_ignore_dups     # ignore duplication command history list
 setopt share_history        # share command history data
 
-
-# Misc Options.
-# -------------
-setopt auto_cd # auto change directory
-setopt auto_pushd # auto directory pushd that you can get dirs list by ce -[tab]
-setopt correct # command correct edition before each completion attempt
-setopt list_packed # compacked complete list display
-setopt noautoremoveslash # no remove postfix slash of command line
-setopt nolistbeep # no beep sound when complete list displayed
-setopt nopromptcr # print last line without linefeed(\n)
-
-
 # Completion configuration.
 # -------------------------
-fpath=(~/.zsh/functions/Completion ${fpath})
+fpath=(~/.zsh/functions/Completion ${fpath}) # user define completion files
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 autoload -U compinit; compinit -u
 
 # Prediction configuration
 #autoload predict-on
 #predict-off
-
 
 # Alias configuration.
 # ====================
@@ -98,7 +92,7 @@ setopt complete_aliases     # aliased ls needs if file/dir completions work
 alias -g H="| head"
 alias -g T="| tail"
 alias -g G="| grep"
-alias -g L="| $PAGER"
+alias -g L="| \$PAGER"
 alias -g W="w3m -T text/html"
 alias -g S="| sed"
 alias -g A="| awk"
@@ -138,6 +132,10 @@ alias cp="nocorrect cp -i"
 alias rm="rm -i"
 alias m="make"
 
+alias s="svn"
+alias g="git"
+alias gs="git svn"
+
 # update commands
 case "${OSTYPE}" in
 darwin*)
@@ -148,27 +146,32 @@ darwin*)
 esac
 
 # emacs
-EMACS_APP_BASE="/Applications/Emacs.app"
-if [ -d "$EMACS_APP_BASE" ]; then
-   alias carbonemacs="${EMACS_APP_BASE}/Contents/MacOS/Emacs"
-   alias ce="carbonemacs"
-fi
+function carbonemacs_setup() {
+    local emacs_app_base="/Applications/Emacs.app"
+    if [ -d "${emacs_app_base}" ]; then
+       alias carbonemacs="${emacs_app_base}/Contents/MacOS/Emacs"
+       alias e="carbonemacs"
+    fi
+}
+carbonemacs_setup; unset -f carbonemacs_setup
 
-# Terminal configuration
-# ======================
-case "${TERM}" in
-xterm*)
-    export TERM=xterm-color
-esac
+# Environment variables setting.
+# ==============================
+if [[ "${TERM}" == (xterm*) ]] { TERM=xterm-color; }
+if [[ "${TERM}" == (kterm*) ]] { TERM=kterm-color; }
+if [[ "${TERM}" == (rxvt*)  ]] { TERM=rxvt-color;  }
+export TERM
 
+if which less &>/dev/null; then PAGER=less; fi
+if which lv &>/dev/null;   then PAGER=lv;   fi
+export PAGER
 
 # Others.
 # =======
 autoload zed # zsh editor
 
-
 # Load user .zshrc configuration file.
 # ====================================
-[ -f ~/.zshrc.mine ] && source ~/.zshrc.mine
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
 # __END__
