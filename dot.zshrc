@@ -104,9 +104,20 @@ alias -g S="| sed"
 alias -g A="| awk"
 
 # ls colors
-if [[ "${OSTYPE}" == (freebsd*|darwin*) ]] { alias ls="ls -G -w" }
-if [[ "${OSTYPE}" == (linux*)           ]] { alias ls="ls --color=auto"; }
-if [[ "${OSTYPE}" == (cygwin*)          ]] { alias ls='ls -F --show-control-chars --color=auto' }
+case "${OSTYPE}" in
+freebsd*|darwin*)
+    export LSCOLORS='exfxcxdxbxegedabagacad'
+    alias ls="ls -G -w"
+    ;;
+linux*)
+    export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
+    alias ls="ls --color=auto"
+    ;;
+cygwin*)
+    alias ls='ls -F --show-control-chars --color=auto'
+    ;;
+esac
+zstyle ':completion:*' list-colors 'di=34' 'ln=35' 'so=32' 'ex=31' 'bd=46;34' 'cd=43;34'
 
 # Common alias.
 # -------------
@@ -145,33 +156,9 @@ fi
 
 # Terminal configuration
 # ======================
-unset LSCOLORS
 case "${TERM}" in
-xterm)
+xterm*)
     export TERM=xterm-color
-    ;;
-kterm)
-    export TERM=kterm-color
-    stty erase # set BackSpace control character
-    ;;
-cons25)
-    unset LANG
-    export LSCOLORS=ExFxCxdxBxegedabagacad
-    export LS_COLORS='di=01;34:ln=01;35:so=01;32:ex=01;31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
-#    zstyle ':completion:*' list-colors \
-#        'di=;34;1' 'ln=;35;1' 'so=;32;1' 'ex=31;1' 'bd=46;34' 'cd=43;34'
-    ;;
-esac
-
-# set terminal title including current directory.
-# -----------------------------------------------
-case "${TERM}" in
-kterm*|xterm*)
-    export LSCOLORS=exfxcxdxbxegedabagacad
-    export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
-#    zstyle ':completion:*' list-colors \
-#        'di=34' 'ln=35' 'so=32' 'ex=31' 'bd=46;34' 'cd=43;34'
-    ;;
 esac
 
 
