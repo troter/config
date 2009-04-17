@@ -82,6 +82,12 @@ autoload -U compinit; compinit -u
 #autoload predict-on
 #predict-off
 
+
+# Others.
+# =======
+autoload zed # zsh editor
+
+
 # Alias configuration.
 # ====================
 # expand aliases before completing
@@ -155,6 +161,7 @@ function carbonemacs_setup() {
 }
 carbonemacs_setup; unset -f carbonemacs_setup
 
+
 # Environment variables setting.
 # ==============================
 if [[ "${TERM}" == (xterm*) ]] { TERM=xterm-color; }
@@ -166,9 +173,6 @@ if which less &>/dev/null; then PAGER=less; fi
 if which lv &>/dev/null;   then PAGER=lv;   fi
 export PAGER
 
-# Others.
-# =======
-autoload zed # zsh editor
 
 # Load user .zshrc configuration file.
 # ====================================
