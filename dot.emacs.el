@@ -2,9 +2,8 @@
 ;;; My emacs.el.
 ;;; ============
 
-;;;============================================================
 ;;; utilitys 
-
+;;; ========
 ;; platform predicate
 (defun windows-ntp () (eq system-type 'windows-nt))
 (defun meadowp () (featurep 'meadow))
@@ -21,26 +20,17 @@
 	(setq strings (reverse rs))))
   (apply 'concat strings))
 
-;; load path
-(defun add-load-path (path &optional afterp)
-  (if (member path load-path)
-      load-path
-    (setq load-path
-          (if afterp
-              (append load-path (list path))
-            (cons path load-path)))))
+
+;;; Path settings.
+;;; ===================
+(add-to-list 'load-path (concat (getenv "HOME") "/.elisp"))
+(add-to-list 'load-path (concat (getenv "HOME") "/.site-lisp"))
+(add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/elisp"))
+(add-to-list 'load-path (concat (getenv "HOME") "/.emacs.d/vendor"))
 
 
-;;;============================================================
-;;; load-path
-(add-load-path (concat (getenv "HOME") "/.elisp"))
-(add-load-path (concat (getenv "HOME") "/.site-lisp"))
-(add-load-path (concat (getenv "HOME") "/.emacs.d/elisp"))
-(add-load-path (concat (getenv "HOME") "/.emacs.d/vendor"))
-
-
-;;;============================================================
-;;; natural language
+;;; Language settings.
+;;; ==================
 (set-language-environment "Japanese")
 (defun setup-coding-system (language)
   (set-terminal-coding-system language)
@@ -52,24 +42,24 @@
   (setq file-name-coding-system language))
 
 (defun setup-language-environment-unix ()
-  (cond ((equal (getenv "LANG") "ja_JP.UTF-8")
-         (setup-coding-system 'utf-8))
-        ((equal (getenv "LANG") "ja_JP.EUC-JP")
-         (setup-coding-system 'euc-jp))))
+  (cond ((equal (getenv "LANG") "ja_JP.EUC-JP")
+         (setup-coding-system 'euc-jp))
+        (t
+         (setup-coding-system 'utf-8))))
 (defun setup-language-environment-windows ()
   (setup-coding-system 'sjis))
 
 (progn
   (if (< emacs-major-version 22)
-      (require 'un-define))
-  (cond ((not (windows-ntp))
-         (setup-language-environment-unix))
+      (require 'un-define)) ; mule-ucs
+  (cond ((windows-ntp)
+         (setup-language-environment-windows))
         (t
-         (setup-language-environment-windows))))
+         (setup-language-environment-unix))))
 
 
-;;;============================================================
-;;; input method
+;;; Input method settings.
+;;; ======================
 (defun setup-input-method-ime ()
   (setq default-input-method "MW32-IME")
   (setq-default mw32-ime-mode-line-state-indicator "[--]")
@@ -103,6 +93,8 @@
 
 (cond ((windows-ntp)
        (setup-input-method-ime))
+      ((carbon-emacsp) ; no setting
+       t)
       (t ; other systems
        (or (condition-case nil
                (setup-input-method-anthy)
@@ -110,8 +102,11 @@
            default-input-method)))
 
 
-;;;============================================================
+;;; Look and Feel.
+;;;===============
+
 ;;; font
+;;; ----
 (defun setup-font-windows ()
   (setq w32-use-w32-font-dialog nil)
   (setq scalable-fonts-allowed t)
@@ -138,29 +133,33 @@
   ;;(set-face-font 'bold-italic
   ;;               "-shinonome-gothic-bold-i-normal--14-*-*-*-*-*-*-*")
   (create-fontset-from-fontset-spec
-   (strings-join '("-mplus-*-mplus-r-normal--10-*-*-*-*-*-fontset-mplus_10r"
-                   "ascii:-mplus-gothic-medium-r-normal--10-*-iso8859-1"
-                   "japanese-jisx0208:-mplus-gothic-medium-r-normal--10-*-jisx0208.1990-0"
-                   "katakana-jisx0201:-mplus-gothic-medium-r-normal--10-*-jisx0201.1976-0")
-                 ","))
+   (strings-join
+    '("-mplus-*-mplus-r-normal--10-*-*-*-*-*-fontset-mplus_10r"
+      "ascii:-mplus-gothic-medium-r-normal--10-*-iso8859-1"
+      "japanese-jisx0208:-mplus-gothic-medium-r-normal--10-*-jisx0208.1990-0"
+      "katakana-jisx0201:-mplus-gothic-medium-r-normal--10-*-jisx0201.1976-0")
+    ","))
   (create-fontset-from-fontset-spec
-   (strings-join '("-mplus-*-mplus-r-normal--12-*-*-*-*-*-fontset-mplus_10b"
-                   "ascii:-mplus-gothic-bold-r-normal--10-*-iso8859-1"
-                   "japanese-jisx0208:-mplus-gothic-bold-r-normal--10-*-jisx0208.1990-0"
-                   "katakana-jisx0201:-mplus-gothic-bold-r-normal--10-*-jisx0201.1976-0")
-                 ","))
+   (strings-join
+    '("-mplus-*-mplus-r-normal--12-*-*-*-*-*-fontset-mplus_10b"
+      "ascii:-mplus-gothic-bold-r-normal--10-*-iso8859-1"
+      "japanese-jisx0208:-mplus-gothic-bold-r-normal--10-*-jisx0208.1990-0"
+      "katakana-jisx0201:-mplus-gothic-bold-r-normal--10-*-jisx0201.1976-0")
+    ","))
   (create-fontset-from-fontset-spec
-   (strings-join '("-mplus-*-mplus-r-normal--12-*-*-*-*-*-fontset-mplus_12r"
-                   "ascii:-mplus-fxd-medium-r-semicondensed--12-*-iso8859-1"
-                   "japanese-jisx0208:-mplus-gothic-medium-r-normal--12-*-jisx0208.1990-0"
-                   "katakana-jisx0201:-mplus-gothic-medium-r-normal--12-*-jisx0201.1976-0")
-                 ","))
+   (strings-join
+    '("-mplus-*-mplus-r-normal--12-*-*-*-*-*-fontset-mplus_12r"
+      "ascii:-mplus-fxd-medium-r-semicondensed--12-*-iso8859-1"
+      "japanese-jisx0208:-mplus-gothic-medium-r-normal--12-*-jisx0208.1990-0"
+      "katakana-jisx0201:-mplus-gothic-medium-r-normal--12-*-jisx0201.1976-0")
+    ","))
   (create-fontset-from-fontset-spec
-   (strings-join '("-mplus-*-mplus-r-normal--12-*-*-*-*-*-fontset-mplus_12b"
-                   "ascii:-mplus-fxd-bold-r-semicondensed--12-*-iso8859-1"
-                   "japanese-jisx0208:-mplus-gothic-bold-r-normal--12-*-jisx0208.1990-0"
-                   "katakana-jisx0201:-mplus-gothic-bold-r-normal--12-*-jisx0201.1976-0")
-                 ","))
+   (strings-join
+    '("-mplus-*-mplus-r-normal--12-*-*-*-*-*-fontset-mplus_12b"
+      "ascii:-mplus-fxd-bold-r-semicondensed--12-*-iso8859-1"
+      "japanese-jisx0208:-mplus-gothic-bold-r-normal--12-*-jisx0208.1990-0"
+      "katakana-jisx0201:-mplus-gothic-bold-r-normal--12-*-jisx0201.1976-0")
+    ","))
   (set-default-font "fontset-mplus_12r"))
 
 (cond ((windows-ntp)
@@ -172,76 +171,106 @@
 	     (t
 	      (setup-font-others)))))
 
+;;; Color settings.
+;;; ---------------
+(global-font-lock-mode t) ; font lock !!
 
-;;;============================================================
-;;; frame
-(defun setup-frame-windows ()
-  (setq default-frame-alist
-        (append (list 
-                 ;;'(foreground-color . "black")
-                 '(foreground-color . "white")
-                 '(background-color . "black")
-                 ;;'(background-color . "LemonChiffon")
-                 ;;'(background-color . "gray")
-                 '(border-color . "black")
-                 '(mouse-color . "white")
-                 '(cursor-color . "black")
-                 ;;'(ime-font . "Nihongo-12") ; TrueType のみ
-                 ;;'(font . "bdf-fontset")    ; BDF
-                 ;'(font . "private-fontset"); TrueType
-                 '(width . 80)
-                 '(height . 38)
-                 '(top . 100)
-                 '(left . 100))
-                default-frame-alist))
-  (set-frame-parameter (selected-frame)  'alpha  80))
+(defun default-frame-color-setting ()
+  ;; 文字の色を設定します。
+  (add-to-list 'default-frame-alist '(foreground-color . "gray10"))
+  ;; 背景色を設定します。
+  (add-to-list 'default-frame-alist '(background-color . "white"))
+  ;; カーソルの色を設定します。
+  (add-to-list 'default-frame-alist '(cursor-color . "SlateBlue2"))
+  ;; マウスポインタの色を設定します。
+  (add-to-list 'default-frame-alist '(mouse-color . "SlateBlue2"))
+  ;; モードラインの文字の色を設定します。
+  (set-face-foreground 'modeline "white")
+  ;; モードラインの背景色を設定します。
+  (set-face-background 'modeline "MediumPurple2")
+  ;; 選択中のリージョンの色を設定します。
+  (set-face-background 'region "LightSteelBlue1")
+  ;; モードライン（アクティブでないバッファ）の文字色を設定します。
+  (set-face-foreground 'mode-line-inactive "gray30")
+  ;; モードライン（アクティブでないバッファ）の背景色を設定します。
+  (set-face-background 'mode-line-inactive "gray85")
+)
+(defun color-theme-settings ()
+  (condition-case nil (require 'color-theme) (file-error nil))
+  (cond ((featurep 'color-theme)
+         (color-theme-initialize)
+         (color-theme-arjen))))
+(if window-system
+    (progn
+      (default-frame-color-setting)
+      (color-theme-settings)
+      (add-to-list 'default-frame-alist '(alpha . 85))
+      (set-frame-parameter nil 'alpha '(85 50))
+      ))
 
-(cond ((windows-ntp)
-       (setup-frame-windows))
-      (t
-;       (require 'color-theme)
-;       (color-theme-midnight)
-       ))
-
-
-;;;============================================================
-;;; misc
-
-;; key
-;(global-set-key "\C-z" 'undo)                       ;;UNDO
-;(global-set-key "\C-h" 'backward-delete-char)      ;;Ctrl-Hでバックスペース
-
-;; mouse 
-(mouse-wheel-mode t)                                ;;ホイールマウス
-(cond ((windows-ntp)
-       ;; マウスカーソルを消す
-       (setq w32-hide-mouse-on-key t)
-       (setq w32-hide-mouse-timeout 5000)))
-
-;; view
-(global-font-lock-mode t)                           ;;文字の色つけ
-(transient-mark-mode t)
-(show-paren-mode t)
-(setq visible-bell t)                               ;;警告音を消す
-
-;; hl-line
+;;; hl-line
+;;; -------
 (global-hl-line-mode t)
 (setq hl-line-face 'underline)
 (hl-line-mode 1)
 
-;; mode line
+;;; mode line
+;;; ---------
 (setq line-number-mode t)                           ;;カーソルのある行番号を表示
 (setq column-number-mode t)                         ;;カーソルのある列番号を表示
 (display-time)                                      ;;時計を表示
 
-;; window
+;;; window
+;;; ------
 (set-scroll-bar-mode 'right)                        ;;スクロールバーを右に表示
 (menu-bar-mode -1)                                  ;;メニューバーを消す
 (tool-bar-mode -1)                                  ;;ツールバーを消す
 (setq frame-title-format                            ;;フレームのタイトル指定
         (concat "%b - emacs@" system-name))
 
-;; other
+;;; fullscreen for mac
+;;; ------------------
+(when (eq window-system 'mac)
+  (add-hook 'window-setup-hook
+            (lambda ()
+;;              (setq mac-autohide-menubar-on-maximize t)
+              (set-frame-parameter nil 'fullscreen 'fullboth)
+              )))
+(defun mac-toggle-max-window ()
+  (interactive)
+  (if (frame-parameter nil 'fullscreen)
+      (set-frame-parameter nil 'fullscreen nil)
+    (set-frame-parameter nil 'fullscreen 'fullboth)))
+
+;;; mouse 
+;;; -----
+(mouse-wheel-mode t)                                ;;ホイールマウス
+(cond ((windows-ntp)
+       ;; マウスカーソルを消す
+       (setq w32-hide-mouse-on-key t)
+       (setq w32-hide-mouse-timeout 5000)))
+
+;;; misc
+;;; ----
+(transient-mark-mode t) ;; show mark region
+(show-paren-mode t)
+(setq visible-bell t)                               ;;警告音を消す
+
+
+;;; Key binding configuration.
+;;; ==========================
+;; key
+;(global-set-key "\C-z" 'undo)                       ;;UNDO
+(global-set-key [f1] 'help-for-help)
+(global-set-key "\C-h" 'backward-delete-char)      ;;Ctrl-Hでバックスペース
+
+(when (eq window-system 'mac)
+  (global-set-key "\M-\r" 'mac-toggle-max-window))
+
+
+
+;;; Miscellaneouse.
+;;; ===============
 (setq inhibit-startup-message t)
 (auto-compression-mode t)                           ;;日本語infoの文字化け防止
 (setq system-uses-terminfo nil)
@@ -249,7 +278,6 @@
 ;(setq-default truncate-lines t)
 ;(setq make-backup-files nil)                       ;;バックアップファイルを作成しない
 ;(setq kill-whole-line t)                           ;;カーソルが行頭にある場合も行全体を削除
-
 
 ;;;============================================================
 ;;; buffer utility
@@ -347,8 +375,8 @@
 
 ;;;============================================================
 ;;; dired
-;(require 'wdired)
-;(define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
+(require 'wdired)
+(define-key dired-mode-map "r" 'wdired-change-to-wdired-mode)
 
 ;; sorter.el
 ;; http://www.bookshelf.jp/elc/sorter.el
@@ -536,6 +564,8 @@
 
 ;;;============================================================
 ;;; other major modes 
+(add-hook 'after-save-hook
+          'executable-make-buffer-file-executable-if-script-p)
 
 ;;====================
 ;; yasnipet
