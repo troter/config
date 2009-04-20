@@ -111,6 +111,10 @@ freebsd*|darwin*)
     ;;
 linux*)
     export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
+    # ad-hoc
+    if [[ `ls --version | head -n 1 | awk '{print $3}'` = (5.2*) ]] {
+        export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:'
+    }
     alias ls="ls --color=auto"
     ;;
 cygwin*)
@@ -167,6 +171,7 @@ carbonemacs_setup; unset -f carbonemacs_setup
 if [[ "${TERM}" == (xterm*) ]] { TERM=xterm-color; }
 if [[ "${TERM}" == (kterm*) ]] { TERM=kterm-color; }
 if [[ "${TERM}" == (rxvt*)  ]] { TERM=rxvt-color;  }
+if [[ "${OSTYPE}" == (cygwin*) ]] { TERM=cygwin;  }
 export TERM
 
 if which less &>/dev/null; then PAGER=less; fi
