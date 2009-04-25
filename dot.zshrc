@@ -13,7 +13,7 @@ ulimit -c 0
 # Misc Options.
 # -------------
 setopt auto_cd # auto change directory
-setopt auto_pushd # auto directory pushd that you can get dirs list by ce -[tab]
+#setopt auto_pushd # auto directory pushd that you can get dirs list by ce -[tab]
 setopt correct # command correct edition before each completion attempt
 setopt list_packed # compacked complete list display
 setopt noautoremoveslash # no remove postfix slash of command line
