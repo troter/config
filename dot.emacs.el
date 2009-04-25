@@ -285,6 +285,7 @@
 ;(global-set-key "\C-z" 'undo)                       ;;UNDO
 (global-set-key [f1] 'help-for-help)
 (global-set-key "\C-h" 'backward-delete-char)      ;;Ctrl-Hでバックスペース
+(global-set-key "\C-xp" (lambda () (interactive) (other-window -1)))
 
 (when (eq window-system 'mac)
   (global-set-key "\M-\r" 'mac-toggle-max-window))
