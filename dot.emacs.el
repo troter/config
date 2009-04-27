@@ -244,9 +244,12 @@
 
 ;;; window
 ;;; ------
-(set-scroll-bar-mode 'right)                        ;;スクロールバーを右に表示
+(if window-system
+    (progn
+      (set-scroll-bar-mode 'right)                        ;;スクロールバーを右に表示
+      (tool-bar-mode -1)                                  ;;ツールバーを消す
+      ))
 (menu-bar-mode -1)                                  ;;メニューバーを消す
-(tool-bar-mode -1)                                  ;;ツールバーを消す
 (setq frame-title-format                            ;;フレームのタイトル指定
         (concat "%b - emacs@" system-name))
 
