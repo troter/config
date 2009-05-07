@@ -21,7 +21,7 @@ if [ "${PATH/$HOME/}" = "$PATH" ] ; then # if $HOME/bin is not in $PATH ...
       MANPATH="/opt/local/share/man:$MANPATH"
     fi
     if [ -d "/opt/local/share/info" ]; then
-      INFOPATH="/opt/local/share/info:$MANPATH"
+      INFOPATH="/opt/local/share/info:$INFOPATH"
     fi
     if [ -d "/opt/local/lib" ]; then
       LD_LIBRARY_PATH="/opt/local/lib:$LD_LIBRARY_PATH"
