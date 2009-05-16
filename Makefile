@@ -12,8 +12,10 @@ YASNIPPET_URL=http://yasnippet.googlecode.com/files/yasnippet-0.5.9.tar.bz2
 
 ELISP_URLS= http://stud4.tuwien.ac.at/~e0225855/linum/linum.el \
  http://tiny-tools.cvs.sourceforge.net/*checkout*/tiny-tools/tiny-tools/lisp/other/folding.el \
- http://svn.coderepos.org/share/lang/elisp/anything-c-yasnippet/anything-c-yasnippet.el
-EMACSWIKI_ELISP_NAME= auto-complete.el anything.el anything-config.el 
+ http://svn.coderepos.org/share/lang/elisp/anything-c-yasnippet/anything-c-yasnippet.el \
+ http://www.splode.com/~friedman/software/emacs-lisp/src/protbuf.el \
+ http://www.bookshelf.jp/elc/sorter.el
+EMACSWIKI_ELISP_NAME= auto-install.el auto-complete.el anything.el anything-config.el ac-anything.el
 
 define install-elisp-base
 	$(EMACS_BATCH) \
