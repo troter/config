@@ -1,23 +1,23 @@
 ;;; -*- coding: utf-8; indent-tabs-mode: nil -*-
 ;;; anything-setting.el ---
 
-;; (install-elisp-from-emacswiki "auto-complete")
+;; (install-elisp-from-emacswiki "auto-complete.el")
 (require 'auto-complete)
 (global-auto-complete-mode t)
 
-;; (auto-install-batch "anything")
+;; (auto-install-batch "anything.el")
 (require 'anything)
-(setq anything-sources
-      '(anything-c-source-buffers+
-	anything-c-source-colors
-	anything-c-source-recentf
-	anything-c-source-man-pages
-	anything-c-source-emacs-commands
-	anything-c-source-emacs-functions
-	anything-c-source-files-in-current-dir
-	))
-
-;; (install-elisp-from-emacswiki "ac-anything")
+;(setq anything-sources
+;      '(anything-c-source-buffers+
+;	anything-c-source-colors
+;	anything-c-source-recentf
+;	anything-c-source-man-pages
+;	anything-c-source-emacs-commands
+;	anything-c-source-emacs-functions
+;	anything-c-source-files-in-current-dir
+;	))
+;
+;; (install-elisp-from-emacswiki "ac-anything.el")
 (require 'ac-anything)
 (define-key ac-complete-mode-map (kbd "C-:") 'ac-complete-with-anything)
 
