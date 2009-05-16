@@ -1,12 +1,12 @@
 # -*- coding:utf-8 -*-
 # Makefile
 
-.PHONY: all download install
+.PHONY: all download install clean-download-file
 all: install
 
 ELISP_DIR=dot.emacs.d/elisp
 TMP_DIR=.tmp
-#(auto-install-batch "anything")
+
 EMACS=emacs
 EMACS_BATCH_OPTION= --batch -no-init-file -no-site-file
 EMACS_BATCH=$(EMACS) $(EMACS_BATCH_OPTION)
@@ -50,8 +50,6 @@ install-elisp.el: $(TMP_DIR)
 clean-download-file:
 	rm -rf $(TMP_DIR)
 	rm -rf $(ELISP_DIR)
-	#http://stud4.tuwien.ac.at/~e0225855/linum/linum.el \
-	#http://tiny-tools.cvs.sourceforge.net/*checkout*/tiny-tools/tiny-tools/lisp/other/folding.el
 
 download: clean-download-file install-elisp.el $(ELISP_DIR)
 	for url in `grep --exclude="*~" "(install-elisp " dot.emacs.d/conf/* | awk '{print $$NF}' | cut -f 1 -d ')'`; \
@@ -61,26 +59,18 @@ download: clean-download-file install-elisp.el $(ELISP_DIR)
 	    do $(call install-elisp-from-emacswiki, "$$url"); \
 	done
 	$(call download-yasnippet)
+	# TODO:
+	#(auto-install-batch "anything")
+	#http://stud4.tuwien.ac.at/~e0225855/linum/linum.el \
+	#http://tiny-tools.cvs.sourceforge.net/*checkout*/tiny-tools/tiny-tools/lisp/other/folding.el
 
-install: install.dot.zshenv install.dot.zshrc install.dot.screenrc install.dot.inputrc install.dot.emacs.el install.dot.emacs.d
-
-install.dot.zshenv:
-	cp dot.zshenv $(HOME)/.zshenv
-
-install.dot.zshrc:
-	cp dot.zshrc $(HOME)/.zshrc
-
-install.dot.screenrc:
-	cp dot.screenrc $(HOME)/.screenrc
-
-install.dot.inputrc:
-	cp dot.inputrc $(HOME)/.inputrc
-
-install.dot.emacs.el:
-	cp dot.emacs.el $(HOME)/.emacs.el
-
-install.dot.emacs.d: dot.emacs.d
-	cp -R dot.emacs.d/ $(HOME)/.emacs.d
+install:
+	for file in `ls | grep dot. | grep -v "~"`; do \
+	    dotfile=`echo $$file|cut -c  4-`; \
+	    cp_options=; if [ -d $$file ] ; then cp_options=-R; fi; \
+	    echo $$cp_options $$file $(HOME)/$$dotfile;\
+	    cp $$cp_options $$file $(HOME)/$$dotfile; \
+	done
 
 clean: clean-download-file
 
