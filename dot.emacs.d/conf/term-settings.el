@@ -3,7 +3,7 @@
 
 (setq elscreen-prefix-key "\C-z")
 (setq elscreen-display-tab nil)
-(load "elscreen")
+(load "elscreen" t)
 
 ;; term
 ;; ----

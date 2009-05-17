@@ -16,6 +16,7 @@ INSTALL_ELISP_EL_URL=http://www.emacswiki.org/cgi-bin/wiki/download/install-elis
 
 define install-elisp-base
 	$(EMACS_BATCH) --directory $(ELISP_DIR) --load $(INSTALL_ELISP_EL) \
+	--eval "(add-to-list 'load-path \"$(ELISP_DIR)\")" \
 	--eval "(setq install-elisp-confirm-flag nil)" \
 	--eval "(setq install-elisp-repository-directory \"$(ELISP_DIR)\")" \
 	--eval "($(strip $1) $(strip $2))"
@@ -52,11 +53,11 @@ clean-download-file:
 	rm -rf $(ELISP_DIR)
 
 download: clean-download-file install-elisp.el $(ELISP_DIR)
-	for url in `grep --exclude="*~" "(install-elisp " dot.emacs.d/conf/* | awk '{print $$NF}' | cut -f 1 -d ')'`; \
-	    do $(call install-elisp, "$$url"); \
-	done
-	for url in `grep --exclude="*~" "(install-elisp-from-emacswiki " dot.emacs.d/conf/* | awk '{print $$NF}' | cut -f 1 -d ')'`; \
+	for url in `grep --exclude="*~" "(install-elisp-from-emacswiki " dot.emacs.d/conf/* | awk '{print $$NF}' | cut -f 1 -d ')' | sort`; \
 	    do $(call install-elisp-from-emacswiki, "$$url"); \
+	done
+	for url in `grep --exclude="*~" "(install-elisp " dot.emacs.d/conf/* | awk '{print $$NF}' | cut -f 1 -d ')' | sort`; \
+	    do $(call install-elisp, "$$url"); \
 	done
 	$(call download-yasnippet)
 	# TODO:
@@ -67,9 +68,13 @@ download: clean-download-file install-elisp.el $(ELISP_DIR)
 install:
 	for file in `ls | grep dot. | grep -v "~"`; do \
 	    dotfile=`echo $$file|cut -c  4-`; \
-	    cp_options=; if [ -d $$file ] ; then cp_options=-R; fi; \
-	    echo $$cp_options $$file $(HOME)/$$dotfile;\
-	    cp $$cp_options $$file $(HOME)/$$dotfile; \
+	    if [ -d $$file ] ; then \
+	        cp -f -R $$file $$dotfile; \
+	        cp -f -R $$dotfile $(HOME)/$$dotfile; \
+	        rm -rf $$dotfile; \
+	    else \
+	        cp -f $$file $(HOME)/$$dotfile; \
+	    fi \
 	done
 
 clean: clean-download-file
