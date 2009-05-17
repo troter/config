@@ -28,6 +28,18 @@ define install-elisp
 	$(call install-elisp-base, install-elisp, $1)
 endef
 
+define auto-install
+	$(EMACS_BATCH) --directory $(ELISP_DIR) --load $(ELISP_DIR)/auto-install.el --load $(INSTALL_ELISP_EL) \
+	--eval "(add-to-list 'load-path \"$(ELISP_DIR)\")" \
+	--eval "(setq install-elisp-confirm-flag nil)" \
+	--eval "(setq install-elisp-repository-directory \"$(ELISP_DIR)\")" \
+	--eval "(setq auto-install-save-confirm nil)" \
+	--eval "(setq auto-install-install-confirm nil)" \
+	--eval "(auto-install-update-emacswiki-package-name nil)" \
+	--eval "(auto-install-compatibility-setup)" \
+	--eval "(auto-install-batch $(strip $1))"
+endef
+
 YASNIPPET_URL=http://yasnippet.googlecode.com/files/yasnippet-0.5.9.tar.bz2
 
 define download-yasnippet
@@ -53,25 +65,32 @@ clean-download-file:
 	rm -rf $(ELISP_DIR)
 
 download: clean-download-file install-elisp.el $(ELISP_DIR)
-	for url in `grep --exclude="*~" "(install-elisp-from-emacswiki " dot.emacs.d/conf/* | awk '{print $$NF}' | cut -f 1 -d ')' | sort`; \
-	    do $(call install-elisp-from-emacswiki, "$$url"); \
+	for url in `grep --exclude="*~" "(install-elisp-from-emacswiki " dot.emacs.d/conf/* | awk '{print $$NF}' | cut -f 1 -d ')' | sort`; do \
+	    $(call install-elisp-from-emacswiki, "$$url"); \
 	done
-	for url in `grep --exclude="*~" "(install-elisp " dot.emacs.d/conf/* | awk '{print $$NF}' | cut -f 1 -d ')' | sort`; \
-	    do $(call install-elisp, "$$url"); \
+	for url in `grep --exclude="*~" "(install-elisp " dot.emacs.d/conf/* | awk '{print $$NF}' | cut -f 1 -d ')' | sort`; do \
+	    $(call install-elisp, "$$url"); \
 	done
 	$(call download-yasnippet)
 	# TODO:
 	#(auto-install-batch "anything")
+	#(auto-install-batch "auto-complete development version")
 	#http://stud4.tuwien.ac.at/~e0225855/linum/linum.el \
 	#http://tiny-tools.cvs.sourceforge.net/*checkout*/tiny-tools/tiny-tools/lisp/other/folding.el
+
+t:
+	for url in `grep --exclude="*~" "(auto-install-batch " dot.emacs.d/conf/* | awk '{print $$NF}' | cut -f 1 -d ')' | sort`; \
+	    do echo "$$url"; \
+	    $(call auto-install, "$$url"); \
+	done
+
 
 install:
 	for file in `ls | grep dot. | grep -v "~"`; do \
 	    dotfile=`echo $$file|cut -c  4-`; \
 	    if [ -d $$file ] ; then \
-	        cp -f -R $$file $$dotfile; \
-	        cp -f -R $$dotfile $(HOME)/$$dotfile; \
-	        rm -rf $$dotfile; \
+	        mkdir -p $(HOME)/$$dotfile; \
+	        cp -f -R $$file/ $(HOME)/$$dotfile; \
 	    else \
 	        cp -f $$file $(HOME)/$$dotfile; \
 	    fi \
