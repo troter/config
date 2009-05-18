@@ -92,10 +92,9 @@
   (set-face-background 'mode-line-inactive "gray85")
   )
 (defun color-theme-settings ()
-  (condition-case nil (require 'color-theme) (file-error nil))
-  (cond ((featurep 'color-theme)
-         (color-theme-initialize)
-         (color-theme-arjen))))
+  (when (require 'color-theme nil t)
+    (color-theme-initialize)
+    (color-theme-arjen)))
 
 (if window-system
     (progn
