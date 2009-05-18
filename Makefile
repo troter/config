@@ -7,7 +7,7 @@ all: install
 ELISP_DIR=dot.emacs.d/elisp
 TMP_DIR=.tmp
 
-EMACS=emacs
+EMACS=/usr/bin/emacs
 EMACS_BATCH_OPTION= --batch -no-init-file -no-site-file
 EMACS_BATCH=$(EMACS) $(EMACS_BATCH_OPTION)
 
@@ -90,7 +90,9 @@ install:
 	    dotfile=`echo $$file|cut -c  4-`; \
 	    if [ -d $$file ] ; then \
 	        mkdir -p $(HOME)/$$dotfile; \
-	        cp -f -R $$file/ $(HOME)/$$dotfile; \
+	        for f in `ls $$file`; do \
+	            cp -R $$file/$$f $(HOME)/$$dotfile/; \
+	        done \
 	    else \
 	        cp -f $$file $(HOME)/$$dotfile; \
 	    fi \
