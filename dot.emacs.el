@@ -27,6 +27,7 @@
 ;;; ===================
 (add-to-list 'load-path "~/.emacs.d/conf")
 (add-to-list 'load-path install-elisp-directory)
+(add-to-list 'load-path "~/.emacs.d/auto-install")
 
 ;;; Loading.
 ;;; ========
