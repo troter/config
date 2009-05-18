@@ -23,11 +23,11 @@
           'comint-watch-for-password-prompt)
 
 ;; use zsh
-(cond ((windows-ntp)
-       ;; use cygwin zsh
-       (setq explicit-shell-file-name "zsh")
-       (setq shell-file-name "sh")
-       (setq shell-command-switch "-c")
-       (modify-coding-system-alist 'process ".*sh\\.exe" '(undecided-dos . euc-japan-unix))))
+(when(windows-ntp)
+  ;; use cygwin zsh
+  (setq explicit-shell-file-name "zsh")
+  (setq shell-file-name "sh")
+  (setq shell-command-switch "-c")
+  (modify-coding-system-alist 'process ".*sh\\.exe" '(undecided-dos . euc-japan-unix)))
 
 ;;; term-setting.el ends here
