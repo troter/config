@@ -97,5 +97,6 @@ install:
 	done
 
 clean: clean-download-file
+	rm -rf *~
 
 # end of Makefile
