@@ -85,7 +85,7 @@
           anything-c-source-recentf
           anything-c-source-files-in-current-dir
 ;;          anything-c-source-home-directory
-          anything-c-source-locate
+;;          anything-c-source-locate
           anything-c-source-buffer-not-found
           anything-c-source-colors
           anything-c-source-man-pages
