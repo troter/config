@@ -7,7 +7,7 @@ all: install
 ELISP_DIR=dot.emacs.d/elisp
 TMP_DIR=.tmp
 
-EMACS=/usr/bin/emacs
+EMACS=emacs
 EMACS_BATCH_OPTION= --batch -no-init-file -no-site-file
 EMACS_BATCH=$(EMACS) $(EMACS_BATCH_OPTION)
 
