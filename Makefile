@@ -75,7 +75,6 @@ download: clean-download-file install-elisp.el $(ELISP_DIR)
 	# TODO:
 	#(auto-install-batch "anything")
 	#(auto-install-batch "auto-complete development version")
-	#http://stud4.tuwien.ac.at/~e0225855/linum/linum.el \
 	#http://tiny-tools.cvs.sourceforge.net/*checkout*/tiny-tools/tiny-tools/lisp/other/folding.el
 
 t:
