@@ -1,5 +1,5 @@
 # -*- coding:utf-8; mode:ruby -*-
-# Rakefile for user configration.
+# Rakefile for my user configration.
 
 begin; require 'rubygem'; rescue LoadError; end
 
@@ -8,35 +8,11 @@ require 'rake/clean'
 require 'find'
 require 'pp'
 
-DOT_FILES = FileList["dot.*"]
+DESTDIR = ENV['HOME']
+TMPDIR = ".tmp"
 
-EMACS_CONFIGS = FileList["dot.emacs.d/conf/*.el"]
+CLEAN.include('*~')
 
-
-ELISP_DIR = "dot.emacs.d/elisp"
-
-TMP_DIR = ".tmp"
-
-EMACS = "emacs"
-EMACS_BATCH_OPTION = "--batch -no-init-file -no-site-file"
-EMACS_BATCH = "#{EMACS} #{EMACS_BATCH_OPTION}"
-
-INSTALL_ELISP_EL = "#{TMP_DIR}/install-elisp.el"
-INSTALL_ELISP_EL_URL="http://www.emacswiki.org/cgi-bin/wiki/download/insall-elisp.el"
-
-def emacs_backup_file?(file)
-  /~\z/ === file
-end
-
-def install(install_function, file)
-  puts ["#{EMACS_BATCH}",
-         "--directory #{ELISP_DIR}",
-         "--load #{INSTALL_ELISP_EL}",
-         "--eval \"(add-to-list 'load-path \\\"#{ELISP_DIR}\\\")\"",
-         "--eval \"(setq install-elisp-confirm-flag nil)\"",
-         "--eval \"(setq install-elisp-repository-directory \\\"#{ELISP_DIR}\\\")\"",
-         "--eval \"(#{install_function} \\\"#{file}\\\")\""].join(' ')
-end
 
 def auto_install()
 #  print ["#{EMACS_BATCH} --directory #{ELISP_DIR}",
@@ -53,44 +29,97 @@ def auto_install()
 #
 end
   
+task :default => [:update]
 
-task :default => [:install]
+task :update => [:download_elisp]
 
-task :install do
-  install("install-elisp-from-emacswiki", "auto-install")
+
+desc "Download elisp."
+task :download_elisp
+
+# for download elisps
+EMACS_CONFIGS = FileList["dot.emacs.d/conf/*.el"]
+ELISP_DIR = "dot.emacs.d/elisp"
+EMACS = "emacs"
+EMACS_BATCH_OPTION = "--batch -no-init-file -no-site-file"
+EMACS_BATCH = "#{EMACS} #{EMACS_BATCH_OPTION}"
+
+# installer
+lambda do
+  elisp = "http://www.emacswiki.org/cgi-bin/wiki/download/install-elisp.el"
+  dest = elisp.pathmap("#{TMPDIR}/%f")
+  timestamp = elisp.pathmap("#{TMPDIR}/timestamp.%f")
+  INSTALL_ELISP_EL = dest
+  
+  file dest                do; sh "wget #{elisp} --directory-prefix=#{TMPDIR}"; end
+  file timestamp => [dest] do; touch timestamp; end
+
+  # add deps
+  task :install_elisp => [timestamp]
+  task :download_elisp => [timestamp]
+  CLOBBER.include [dest, timestamp]
+end.call
+
+def install_elisp(install_function, file)
+  sh <<EOS
+ #{EMACS_BATCH} --directory #{ELISP_DIR} --load #{INSTALL_ELISP_EL} \
+ --eval "(add-to-list 'load-path \\\"#{ELISP_DIR}\\\")" \
+ --eval "(setq install-elisp-confirm-flag nil)" \
+ --eval "(setq install-elisp-repository-directory \\\"#{ELISP_DIR}\\\")" \
+ --eval "(#{install_function} \\\"#{file}\\\")"
+EOS
 end
 
-file INSTALL_ELISP_EL do
-  sh "wget #{INSTALL_ELISP_EL_URL} --directory-prefix=#{TMP_DIR}"
+
+# Generate download elisp tasks. its relateing to install-elisp.
+INSTALL_ELISP_FROM_URL = EMACS_CONFIGS.map do |config|
+  IO.readlines(config).grep(/\(install-elisp \"([^"]*?)\"/) { $1 }
+end.flatten
+INSTALL_ELISP_FROM_EMACSWIKI = EMACS_CONFIGS.map do |config|
+  IO.readlines(config).grep(/\(install-elisp-from-emacswiki \"([^"]*?)\"/) { $1 }
+end.flatten
+
+def generate_rule_elisp_download(func, elisp)
+  dest = elisp.pathmap("#{ELISP_DIR}/%f")
+  timestamp = elisp.pathmap("#{TMPDIR}/timestamp.%f")
+
+  file dest                do; install_elisp(func, elisp); end
+  file timestamp => [dest] do; touch timestamp; end
+
+  # add deps
+  task :download_elisp => [timestamp]
+  CLOBBER.include [timestamp, dest]
+end  
+
+INSTALL_ELISP_FROM_URL.each do |elisp|
+  generate_rule_elisp_download('install-elisp', elisp)
+end
+INSTALL_ELISP_FROM_EMACSWIKI.each do |elisp|
+  generate_rule_elisp_download('install-elisp-from-emacswiki', elisp)
 end
 
-task :download => [INSTALL_ELISP_EL] do
-  EMACS_CONFIGS.each do |config|
-    IO.readlines(config).grep(/\(install-elisp-from-emacswiki \"([^"]*?)\"/) do |item|
-      install("install-elisp-from-emacswiki", $1)
-    end
+# Generate download elisp tasks. its relateing to auto-install.
+AUTO_INSTALL =  EMACS_CONFIGS.map do |config|
+  IO.readlines(config).grep(/\(auto-install-batch \"([^"]*?)\"/) { $1 }
+end.flatten
+
+# TODO: 
+
+
+desc "Deploy user configurations."
+task :deploy
+
+DOT_FILES = FileList["dot.*"]
+DOT_FILES.each do |dot_file|
+  src = dot_file
+  dest = dot_file.pathmap("#{DESTDIR}/%{dot,}p")
+
+  file dest => [src] do
+    copy_entry src, dest, true
   end
 
-  EMACS_CONFIGS.each do |config|
-    IO.readlines(config).grep(/\(install-elisp \"([^"]*?)\"/) do |item|
-      install("install-elisp", $1)
-    end
-  end
-
-  EMACS_CONFIGS.each do |config|
-    IO.readlines(config).grep(/\(auto-install-batch \"([^"]*?)\"/) do |item|
-      auto_install($1)
-    end
-  end
+  # add deps
+  task :deploy => [dest]
 end
 
-pp DOT_FILES.pathmap("install.%f")
-task :install => DOT_FILES.pathmap("install.%f")
-
-DOT_FILES.pathmap("install.%f").to_a.each do |f|
-  pp /insall.*$/  ===  f
-end
-
-rule /install\..*$/ do |t|
-  pp t.name
-end
+# End of Rakefile.
