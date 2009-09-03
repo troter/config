@@ -12,22 +12,6 @@ DESTDIR = ENV['HOME']
 TMPDIR = ".tmp"
 
 CLEAN.include('*~')
-
-
-def auto_install()
-#  print ["#{EMACS_BATCH} --directory #{ELISP_DIR}",
-#         "--load #{ELISP_DIR}/auto-install.el"
-#         "--load #{INSTALL_ELISP_EL}",
-#　　         "--eval '(add-to-list \'load-path \"$(ELISP_DIR)\")'" \
-#	--eval "(setq install-elisp-confirm-flag nil)" \
-#	--eval "(setq install-elisp-repository-directory \"$(ELISP_DIR)\")" \
-#	--eval "(setq auto-install-save-confirm nil)" \
-#	--eval "(setq auto-install-install-confirm nil)" \
-#	--eval "(auto-install-update-emacswiki-package-name nil)" \
-#	--eval "(auto-install-compatibility-setup)" \
-#	--eval "(auto-install-batch $(strip $1))"
-#
-end
   
 task :default => [:update]
 
@@ -45,8 +29,11 @@ EMACS_BATCH_OPTION = "--batch -no-init-file -no-site-file"
 EMACS_BATCH = "#{EMACS} #{EMACS_BATCH_OPTION}"
 
 # installer
-lambda do
-  elisp = "http://www.emacswiki.org/cgi-bin/wiki/download/install-elisp.el"
+ELISP_INSTALLER = [
+  "http://www.emacswiki.org/cgi-bin/wiki/download/install-elisp.el",
+  "http://www.emacswiki.org/cgi-bin/wiki/download/auto-install.el",
+]
+ELISP_INSTALLER.each do |elisp|
   dest = elisp.pathmap("#{TMPDIR}/%f")
   timestamp = elisp.pathmap("#{TMPDIR}/timestamp.%f")
   INSTALL_ELISP_EL = dest
@@ -58,7 +45,7 @@ lambda do
   task :install_elisp => [timestamp]
   task :download_elisp => [timestamp]
   CLOBBER.include [dest, timestamp]
-end.call
+end
 
 def install_elisp(install_function, file)
   sh <<EOS
@@ -69,6 +56,22 @@ def install_elisp(install_function, file)
  --eval "(#{install_function} \\\"#{file}\\\")"
 EOS
 end
+
+def auto_install()
+#  print ["#{EMACS_BATCH} --directory #{ELISP_DIR}",
+#         "--load #{ELISP_DIR}/auto-install.el"
+#         "--load #{INSTALL_ELISP_EL}",
+#　　         "--eval '(add-to-list \'load-path \"$(ELISP_DIR)\")'" \
+#	--eval "(setq install-elisp-confirm-flag nil)" \
+#	--eval "(setq install-elisp-repository-directory \"$(ELISP_DIR)\")" \
+#	--eval "(setq auto-install-save-confirm nil)" \
+#	--eval "(setq auto-install-install-confirm nil)" \
+#	--eval "(auto-install-update-emacswiki-package-name nil)" \
+#	--eval "(auto-install-compatibility-setup)" \
+#	--eval "(auto-install-batch $(strip $1))"
+#
+end
+
 
 
 # Generate download elisp tasks. its relateing to install-elisp.
