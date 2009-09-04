@@ -179,7 +179,7 @@ if which less &>/dev/null; then PAGER=less; fi
 if which lv &>/dev/null;   then PAGER=lv;   fi
 export PAGER
 
-GREP_OPTIONS='--color=auto --exclude-dir=".svn" --exclude="*~"'
+GREP_OPTIONS='--color=auto --exclude=.svn --exclude="*~"'
 export GREP_OPTIONS
 
 
