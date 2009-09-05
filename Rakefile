@@ -138,7 +138,7 @@ DOT_FILES.each do |dot_file|
   src = dot_file
   dest = dot_file.pathmap("#{DEST_DIR}/%{dot,}p")
 
-  file dest => [src] do
+  task dest => [src] do
     copy_entry src, dest, true
   end
 
