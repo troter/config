@@ -15,10 +15,14 @@ TMP_DIR = ".tmp"
 task :default => [:update]
 
 desc "Update files."
-task :update => [:download_elisp, :download_yasnippet]
+task :update => [TMP_DIR, :download_elisp, :download_yasnippet]
 
 task :download_elisp
 task :download_yasnippet
+
+file TMP_DIR do
+  mkdirp TMP_DIR
+end
 
 # for download elisps
 DOT_EMACS_D = "dot.emacs.d"
