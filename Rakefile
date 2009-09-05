@@ -8,15 +8,13 @@ require 'rake/clean'
 require 'find'
 require 'pp'
 
+# global settings
 DEST_DIR = ENV['HOME']
 TMP_DIR = ".tmp"
-
-CLEAN.include('*~')
   
 task :default => [:update]
 
 task :update => [:download_elisp]
-
 
 desc "Download elisp."
 task :download_elisp => [:download_elisp_installer]
@@ -25,8 +23,9 @@ desc "Download elisp installer."
 task :download_elisp_installer
 
 # for download elisps
-EMACS_CONFIGS = FileList["dot.emacs.d/conf/*.el"]
-ELISP_DIR = "dot.emacs.d/elisp"
+DOT_EMACS_D = "dot.emacs.d"
+EMACS_CONFIGS = FileList["#{DOT_EMACS_D}/conf/*.el"]
+ELISP_DIR = "#{DOT_EMACS_D}/elisp"
 EMACS = "emacs"
 EMACS_BATCH_OPTION = "--batch -no-init-file -no-site-file"
 EMACS_BATCH = "#{EMACS} #{EMACS_BATCH_OPTION}"
@@ -61,7 +60,7 @@ def generate_rule_elisp_download(dest, taskname = :download_elisp, &download_blo
   timestamp = "#{TMP_DIR}/timestamp.#{dest.gsub(/\//, "_")}"
 
   file dest => [timestamp], &download_block
-  file timestamp do; touch timestamp;  end
+  file timestamp do; touch timestamp; end
 
   # add deps
   task taskname => [dest]
@@ -125,5 +124,11 @@ DOT_FILES.each do |dot_file|
   # add deps
   task :deploy => [dest]
 end
+
+
+# clean.
+CLEAN.include [
+  '*~',
+]
 
 # End of Rakefile.
