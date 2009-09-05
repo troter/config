@@ -58,7 +58,7 @@
     ","))
   (set-default-font "fontset-mplus_12r"))
 
-(cond ((windows-ntp)
+(cond (windows-p
        (setup-font-windows))
       (t
        (cond (window-system
@@ -130,10 +130,10 @@
 ;;; mouse 
 ;;; -----
 (mouse-wheel-mode t) ;;ホイールマウス
-(cond ((windows-ntp)
-       ;; マウスカーソルを消す
-       (setq w32-hide-mouse-on-key t)
-       (setq w32-hide-mouse-timeout 5000)))
+(when windows-p
+  ;; マウスカーソルを消す
+  (setq w32-hide-mouse-on-key t)
+  (setq w32-hide-mouse-timeout 5000))
 
 ;;; misc
 ;;; ----

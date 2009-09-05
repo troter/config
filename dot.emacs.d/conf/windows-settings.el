@@ -1,7 +1,7 @@
 ;;; -*- coding: utf-8; indent-tabs-mode: nil -*-
 ;;; windows-setting.el ---
 
-(when (windows-ntp)
+(when windows-p
   ;; argument-editing の設定
   (when (require 'mw32script nil t)
     (mw32script-init)

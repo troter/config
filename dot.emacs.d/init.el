@@ -38,6 +38,7 @@
   "set autoload iff. FILE has found."
   (and (locate-library file)
        (autoload function file docstring interactive type)))
+(put 'autoload-if-found 'lisp-indent-function 'defun)
 
 ;; string utility
 (defun strings-join (strings &optional separator)

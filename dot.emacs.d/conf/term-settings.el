@@ -23,7 +23,7 @@
           'comint-watch-for-password-prompt)
 
 ;; use zsh
-(when(windows-ntp)
+(when windows-p
   ;; use cygwin zsh
   (setq explicit-shell-file-name "zsh")
   (setq shell-file-name "sh")

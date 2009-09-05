@@ -23,7 +23,7 @@
 (progn
   (if (< emacs-major-version 22)
       (require 'un-define))             ; mule-ucs
-  (if (windows-ntp)
+  (if windows-p
       (setup-language-environment-windows)
     (setup-language-environment-unix)))
 

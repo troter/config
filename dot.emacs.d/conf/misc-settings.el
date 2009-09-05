@@ -15,7 +15,7 @@
           'executable-make-buffer-file-executable-if-script-p)
 
 ;; (install-elisp "http://stud4.tuwien.ac.at/~e0225855/linum/linum.el")
-(when (>= emacs-major-version 22)
+(when emacs22-p
   (require 'linum))
 
 ;;; misc-settings.el ends here
