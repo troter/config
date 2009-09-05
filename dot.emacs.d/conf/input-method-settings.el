@@ -37,7 +37,7 @@
 
 (cond ((windows-ntp)
        (setup-input-method-ime))
-      ((carbon-emacsp)                  ; no setting
+      ((carbon-p)                  ; no setting
        t)
       (t                                ; other systems
        (or (condition-case nil
