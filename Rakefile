@@ -14,13 +14,11 @@ TMP_DIR = ".tmp"
   
 task :default => [:update]
 
-task :update => [:download_elisp]
+desc "Update files."
+task :update => [:download_elisp, :download_yasnippet]
 
-desc "Download elisp."
-task :download_elisp => [:download_elisp_installer]
-
-desc "Download elisp installer."
-task :download_elisp_installer
+task :download_elisp
+task :download_yasnippet
 
 # for download elisps
 DOT_EMACS_D = "dot.emacs.d"
@@ -85,7 +83,7 @@ end.flatten
 # install rules
 ELISP_INSTALLER.each do |elisp|
   dest = "#{ELISP_DIR}/#{File.basename(elisp)}"
-  generate_rule_elisp_download(dest, :download_elisp_installer) do
+  generate_rule_elisp_download(dest) do
     sh "wget #{elisp} --directory-prefix=#{ELISP_DIR}"
   end
 end
@@ -109,8 +107,27 @@ AUTO_INSTALL.each do |elisp_package|
   end
 end
 
+#["http://svn.coderepos.org/share/config/yasnippet/common"].each do |repos|
+#  dest = "#{ELISP_DIR}/yasnippet/snippets"
+#  generate_rule_elisp_download(dest, :download_yasnippet) do |t|
+#    sh "svn export -q --force #{repos} #{dest}"
+#  end
+#end
+
+["http://yasnippet.googlecode.com/files/yasnippet-bundle-0.6.1b.el.tgz"].each do |elisp|
+  dest = "#{ELISP_DIR}/yasnippet-bundle.el"
+  tmp = "#{TMP_DIR}/#{File.basename(elisp)}"
+  generate_rule_elisp_download(dest, :download_yasnippet) do
+    sh "wget #{elisp} --directory-prefix=#{TMP_DIR}"
+    sh "tar xzf #{tmp}"
+    cp dest.pathmap("%f"), dest; rm dest.pathmap("%f")
+  end
+  CLOBBER.include tmp
+end
+
+
 desc "Deploy user configurations."
-task :deploy = [:clean]
+task :deploy => [:clean]
 
 DOT_FILES = FileList["dot.*"]
 DOT_FILES.each do |dot_file|
