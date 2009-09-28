@@ -1,9 +1,8 @@
 # -*- coding:utf-8 -*-
 # Makefile
 
-.PHONY: all download install clean-download-file
+.PHONY: all install
 all: install
-
 
 install:
 	for file in `ls | grep dot. | grep -v "~"`; do \
