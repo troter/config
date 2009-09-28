@@ -5,9 +5,6 @@
 # LANG.
 # =====
 export LANG=ja_JP.UTF-8
-if [ ${OSTYPE} = "cygwin" ]; then
-  export LANG=ja_JP.Shift_JIS;
-fi
 
 # PATH, MANPATH, INFOPATH, LD_LIBRARY_PATH.
 # =========================================
@@ -39,7 +36,7 @@ if [ "${PATH/$HOME/}" = "$PATH" ] ; then # if $HOME/bin is not in $PATH ...
   if [ -d "$HOME/local/man" ]; then MANPATH="$HOME/local/man:$MANPATH"; fi
   if [ -d "$HOME/local/share/man" ]; then MANPATH="$HOME/local/share/man:$MANPATH"; fi
   if [ -d "$HOME/local/info" ]; then INFOPATH="$HOME/local/info:$INFOPATH"; fi
-  
+
   # for PEAR
   if [ -d "$HOME/local/php/bin" ]; then PATH="$HOME/local/php/bin:$PATH"; fi
 

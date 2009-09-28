@@ -175,13 +175,15 @@ if [[ "${TERM}" == (rxvt*)  ]] { TERM=rxvt-color;  }
 if [[ "${OSTYPE}" == (cygwin*) ]] { TERM=cygwin;  }
 export TERM
 
+# pager
 if which less &>/dev/null; then PAGER=less; fi
 if which lv &>/dev/null;   then PAGER=lv;   fi
 export PAGER
+export LESS='-dMr'
+export LV='-c'
 
-GREP_OPTIONS='--color=auto --exclude=.svn --exclude="*~"'
-export GREP_OPTIONS
-
+# grep
+export GREP_OPTIONS='--color=auto --exclude=.svn --exclude="*~"'
 
 # Load user .zshrc configuration file.
 # ====================================
