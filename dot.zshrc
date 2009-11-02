@@ -1,4 +1,4 @@
-# -*- coding:utf-8; mode:sh -*-
+# -*- coding: utf-8; mode: zsh; indent-tabs: nil -*-
 # user generic .zshrc file for zsh(1).
 # ====================================
 
@@ -61,7 +61,7 @@ function prompt_setup() {
     PROMPT="[${c_user}%n${c_reset}@${c_green}%m${c_reset}:${c_cyan}%~${c_reset}${shlevel}]
 ${c_prompt}%#${c_reset} "
     PROMPT2="${c_prompt}%_>${c_reset} "
-    RPROMPT="[`date '+%y/%m/%d %H:%M:%S'`${c_cyan}:${c_reset}%h]"
+    RPROMPT="[%h]"
     SPROMPT="${c_magenta}%r is correct? [n,y,a,e]:${c_reset} "
 }
 prompt_setup; unset -f prompt_setup
@@ -173,8 +173,48 @@ carbonemacs_setup; unset -f carbonemacs_setup
 if [[ "${TERM}" == (xterm*) ]] { TERM=xterm-color; }
 if [[ "${TERM}" == (kterm*) ]] { TERM=kterm-color; }
 if [[ "${TERM}" == (rxvt*)  ]] { TERM=rxvt-color;  }
-if [[ "${OSTYPE}" == (cygwin*) ]] { TERM=cygwin;  }
+#if [[ "${OSTYPE}" == (cygwin*) ]] { TERM=cygwin;  }
 export TERM
+
+#screen -q -X version;
+#if [ "$?" = "0" ]; then
+if [ "$SCREEN" = "t" ]; then
+    chpwd () { echo -n "_`dirs`\\" }
+    preexec() {
+        # see [zsh-workers:13180]
+        # http://www.zsh.org/mla/workers/2000/msg03993.html
+        emulate -L zsh
+        local -a cmd; cmd=(${(z)2})
+        case $cmd[1] in
+            fg)
+                if (( $#cmd == 1 )); then
+                    cmd=(builtin jobs -l %+)
+                else
+                    cmd=(builtin jobs -l $cmd[2])
+                fi
+                ;;
+            %*)
+                cmd=(builtin jobs -l $cmd[1])
+                ;;
+            cd)
+                if (( $#cmd == 2)); then
+                cmd[1]=$cmd[2]
+                fi
+                ;;
+            *)
+                echo -n "k$cmd[1]:t\\"
+                return
+                ;;
+        esac
+
+        local -A jt; jt=(${(kv)jobtexts})
+
+        $cmd >>(read num rest
+            cmd=(${(z)${(e):-\$jt$num}})
+            echo -n "k$cmd[1]:t\\") 2>/dev/null
+    }
+    chpwd
+fi
 
 # pager
 if which less &>/dev/null; then PAGER=less; fi
