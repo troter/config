@@ -39,14 +39,6 @@ if [ "${PATH/$HOME/}" = "$PATH" ] ; then # if $HOME/bin is not in $PATH ...
 
   # for PEAR
   if [ -d "$HOME/local/php/bin" ]; then PATH="$HOME/local/php/bin:$PATH"; fi
-
-  # for NTEmacs
-  if [ -d "/usr/local/emacs/22.2" ]; then PATH="/usr/local/emacs/22.2/bin:$PATH"; fi
-
-  # for Rubygem
-  if which gem &>/dev/null; then
-    PATH="$PATH:$(gem environment gempath)/bin"
-  fi
 fi
 export PATH MANPATH INFOPATH LD_LIBRARY_PATH
 
