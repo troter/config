@@ -1,4 +1,4 @@
-# -*- coding: utf-8; mode: zsh; indent-tabs: nil -*-
+# -*- coding: utf-8; mode: sh; -*-
 # user generic .zshrc file for zsh(1).
 # ====================================
 
@@ -176,10 +176,10 @@ if [[ "${TERM}" == (rxvt*)  ]] { TERM=rxvt-color;  }
 #if [[ "${OSTYPE}" == (cygwin*) ]] { TERM=cygwin;  }
 export TERM
 
-#screen -q -X version;
+#screenA -q -X version;
 #if [ "$?" = "0" ]; then
-if [ "$SCREEN" = "t" ]; then
-    chpwd () { echo -n "_`dirs`\\" }
+if [[ "$SCREEN" = "t" && "${TERM}" != "emacs" ]]; then
+    chpwd () { echo -n "_`dirs`\\"; }
     preexec() {
         # see [zsh-workers:13180]
         # http://www.zsh.org/mla/workers/2000/msg03993.html
@@ -229,5 +229,15 @@ export GREP_OPTIONS='--color=auto --exclude=.svn --exclude="*~"'
 # Load user .zshrc configuration file.
 # ====================================
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
+
+function load_directory_files() {
+  local dir=$1
+  local blob=$2
+  if [[ -z $blob ]] { blob="*" }
+  for file (in `eval echo $dir/$blob`) {
+    source $file
+    echo "$file loaded."
+  }
+}
 
 # __END__
