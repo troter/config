@@ -6,6 +6,14 @@
 # =====
 export LANG=ja_JP.UTF-8
 
+# TERM.
+# =====
+if [[ "${TERM}" == (xterm*) ]] { TERM=xterm-color; }
+if [[ "${TERM}" == (kterm*) ]] { TERM=kterm-color; }
+if [[ "${TERM}" == (rxvt*)  ]] { TERM=rxvt-color;  }
+#if [[ "${OSTYPE}" == (cygwin*) ]] { TERM=cygwin;  }
+export TERM
+
 # PATH, MANPATH, INFOPATH, LD_LIBRARY_PATH.
 # =========================================
 if [ "${PATH/$HOME/}" = "$PATH" ] ; then # if $HOME/bin is not in $PATH ...

@@ -1,23 +1,19 @@
 # -*- coding:utf-8 -*-
-# Makefile
+.PHONY: all install clean clean-backup-file
 
-.PHONY: all install
 all: install
 
-install:
-	for file in `ls | grep dot. | grep -v "~"`; do \
-	    dotfile=`echo $$file|cut -c  4-`; \
-	    if [ -d $$file ] ; then \
-	        mkdir -p $(HOME)/$$dotfile; \
-	        for f in `ls $$file`; do \
-	            cp -R $$file/$$f $(HOME)/$$dotfile/; \
-	        done \
-	    else \
-	        cp -f $$file $(HOME)/$$dotfile; \
-	    fi \
-	done
+install: clean-backup-file
+	for file in dot.*; do \
+            dotfile=`echo $$file|cut -c  4-`; \
+	    ln -f -s `pwd`/$$file $(HOME)/$$dotfile; \
+        done
 
-clean: clean-download-file
-	rm -rf *~
+clean: clean-backup-file
+
+clean-backup-file:
+	for file in `find . -name *~`; do \
+	    rm -rf $$file; \
+	done
 
 # end of Makefile
