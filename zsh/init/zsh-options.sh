@@ -10,5 +10,6 @@ function setup_options() {
     setopt noautoremoveslash # no remove postfix slash of command line
     setopt nolistbeep # no beep sound when complete list displayed
     setopt nopromptcr # print last line without linefeed(\n)
+    setopt auto_remove_slash
 }
 setup_options; unset -f setup_options

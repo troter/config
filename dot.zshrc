@@ -12,7 +12,7 @@ function load_directory_files() {
   if [[ -z $glob ]] { glob="*" }
   for file (`eval echo $dir/$glob`) {
     source $file
-    echo "$file loaded."
+    echo "'$file' loaded."
   }
 }
 
