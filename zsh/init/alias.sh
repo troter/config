@@ -36,6 +36,7 @@ alias m="make"
 alias s="svn"
 alias g="git"
 alias gs="git svn"
+alias c="cheat" # gem install cheat
 
 # update commands
 case "${OSTYPE}" in
