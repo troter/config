@@ -10,8 +10,7 @@ encoding utf-8 utf-8
 defscrollback 10000
 idle 1200
 startup_message off
-#caption always "%{= wb} %-w%{=bu dr}%n %t%{-}%+w %= %{=b wk} [%l] %{=s wb}%y/%m/%d(%D) %{=s wm}%c"
-caption always "%{= wb} %-w%{=bu dr}%n %t%{-}%+w %= %{=s wb}%y/%m/%d(%D) %{=s wm}%c"
+caption always "%{= wb} %-w%{=bu dr}%n %t%{-}%+w %= %{=b wk} [%l] %{=s wb}%y/%m/%d(%D) %{=s wm}%c"
 #hardstatus alwayslastline "[%02c] %~%-w%{=b bw}%n %t%{-}%+w"
 
 # KEYBINDING
