@@ -34,6 +34,7 @@ alias rm="rm -i"
 alias m="make"
 
 alias s="svn"
+alias srevertall="svn revert --depth infinity"
 alias g="git"
 alias gs="git svn"
 alias c="cheat" # gem install cheat
