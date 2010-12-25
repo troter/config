@@ -2,7 +2,7 @@
 
 #screenA -q -X version;
 #if [ "$?" = "0" ]; then
-if [[ "$SCREEN" = "t" && "${TERM}" != "emacs" ]]; then
+if [[ "$SCREEN" = "t" && "$EMACS" = "" ]]; then
     chpwd () { echo -n "_`dirs`\\"; }
     preexec() {
         # see [zsh-workers:13180]
