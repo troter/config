@@ -4,13 +4,9 @@
 all: install
 
 install: clean-backup-file
-	for file in dot.*; do \
-	    dotfile=`echo $$file|cut -c  4-`; \
-	    if which junction; then \
-	        ln -f -s `pwd`/$$file $(HOME)/$$dotfile; \
-	    else \
-	        junction $(HOME)/$$dotfile `pwd`/$$file; \
-	    fi \
+	for file in `find . -name "dot.*" ! -name "dot.*.main"`; do \
+	    dotfile=`echo $$file|cut -c  6-`; \
+	    cp `pwd`/$$file $(HOME)/$$dotfile; \
 	done
 
 clean: clean-backup-file
