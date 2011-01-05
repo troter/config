@@ -1,20 +1,25 @@
+# -*- mode: ruby; coding: utf-8; indent-tabs-mode: nil -*-
 # .irbrc
 require 'irb/completion'
 require 'pp'
-require 'rubygems'
+begin
+  require 'rubygems'
+rescue LoadError
+  STDERR.puts "WARN: please install 'rubygems'."
+end
 
 IRB.conf[:SAVE_HISTORY] = 100000
 
 begin
   require 'win32console'
 rescue LoadError
+  STDERR.puts "WARN: please install 'win32console'."
 end
 
 begin
-  require 'wirble'
-  Wirble.init
-  Wirble.colorize
+  require 'utility_belt'
 rescue LoadError
+  STDERR.puts "WARN: please install 'utility_belt'."
 end
 
 # http://eigenclass.org/hiki.rb?irb+ri+completion
