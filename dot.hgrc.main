@@ -1,25 +1,30 @@
 # hgrc -*- coding:utf-8; -*-
 
 [ui]
-username=Takumi IINO <trot.thunder@gmail.com>
-
-[alias]
-b=branch
-bs=branches
-pr=pull --rebase
-transplant=transplant --log
-#transplantverify=status | grep '.rej' | awk '{print $2}' | xargs -n 1 -I '{}' echo patch -p0 -i '{}' '`echo '{}' | sed -e s/.rej$//`' | sh
+username = Takumi IINO <trot.thunder@gmail.com>
 
 [extensions]
-convert=
-graphlog=
-fetch=
-rebase=
-transplant=
-color=
-parentrevspec=
-mq=
-hgshelve=$HOME/src/hgshelve/hgshelve.py
+color =
+convert =
+fetch =
+graphlog =
+hgshelve =  $HOME/src/hgshelve/hgshelve.py
+mq =
+pager =
+parentrevspec =
+rebase =
+transplant =
+
+[alias]
+l = log
+gl = glog
+b = branch
+bs = branches
+sh = shelve
+uns = unshelve
+pr = pull --rebase
+transplant = transplant --log
+#transplantverify = status | grep '.rej' | awk '{print $2}' | xargs -n 1 -I '{}' echo patch -p0 -i '{}' '`echo '{}' | sed -e s/.rej$//`' | sh
 
 [hooks]
 prechangegroup.mq-no-pull = ! hg qtop > /dev/null 2>&1
