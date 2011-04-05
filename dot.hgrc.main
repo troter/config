@@ -1,25 +1,40 @@
-# hgrc -*- coding:utf-8; -*-
+# -*- coding:utf-8; -*-
+# hgrc
 
 [ui]
-username=Takumi IINO <trot.thunder@gmail.com>
-
-[alias]
-b=branch
-bs=branches
-pr=pull --rebase
-transplant=transplant --log
-#transplantverify=status | grep '.rej' | awk '{print $2}' | xargs -n 1 -I '{}' echo patch -p0 -i '{}' '`echo '{}' | sed -e s/.rej$//`' | sh
+username = Takumi IINO <trot.thunder@gmail.com>
 
 [extensions]
-convert=
-graphlog=
-fetch=
-rebase=
-transplant=
-color=
-parentrevspec=
-mq=
-hgshelve=$HOME/src/hgshelve/hgshelve.py
+color =
+convert =
+eol =
+fetch =
+graphlog =
+hgshelve = $HOME/src/hgshelve/hgshelve.py
+mq =
+pager =
+parentrevspec =
+rebase =
+transplant =
+
+[alias]
+b = branch
+bs = branches
+l = log
+lb = log -b
+gl = glog
+gll = glog --limit
+pr = pull --rebase
+sh = shelve
+ush = unshelve
+transplant = transplant --log
+qi = qimport
+qr = qrefresh
+qf = qfinish
+#transplantverify=status | grep '.rej' | awk '{print $2}' | xargs -n 1 -I '{}' echo patch -p0 -i '{}' '`echo '{}' | sed -e s/.rej$//`' | sh
+
+[pager]
+attend = annotate, cat, diff, export, glog, log, qdiff
 
 [hooks]
 prechangegroup.mq-no-pull = ! hg qtop > /dev/null 2>&1
