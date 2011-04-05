@@ -11,8 +11,9 @@ function load_directory_files() {
   local glob=$2
   if [[ -z $glob ]] { glob="*" }
   for file (`eval echo $dir/$glob`) {
+    echo -n "loding '$file' ... "
     source $file
-    echo "'$file' loaded."
+    echo "complete."
   }
 }
 
