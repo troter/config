@@ -5,6 +5,7 @@
 username = Takumi IINO <trot.thunder@gmail.com>
 
 [extensions]
+bookmarks =
 color =
 convert =
 eol =
@@ -15,6 +16,7 @@ mq =
 pager =
 parentrevspec =
 rebase =
+record =
 transplant =
 
 [alias]
