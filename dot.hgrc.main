@@ -36,7 +36,7 @@ qf = qfinish
 #transplantverify=status | grep '.rej' | awk '{print $2}' | xargs -n 1 -I '{}' echo patch -p0 -i '{}' '`echo '{}' | sed -e s/.rej$//`' | sh
 
 [pager]
-attend = annotate, cat, diff, export, glog, log, qdiff
+attend = annotate, cat, diff, export, glog, log, qdiff, help
 
 [hooks]
 prechangegroup.mq-no-pull = ! hg qtop > /dev/null 2>&1
