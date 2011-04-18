@@ -21,7 +21,7 @@ transplant =
 
 [alias]
 b = branch
-bs = branches
+bs = branches -a
 l = log
 lb = log -b
 gl = glog
