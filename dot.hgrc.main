@@ -20,6 +20,13 @@ record =
 transplant =
 
 [alias]
+# misc
+cm = commit --message
+up = update --check
+. = summary
+: = status
+h = help
+
 # branch
 b = branch
 bs = branches -a
