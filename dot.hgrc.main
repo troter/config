@@ -22,7 +22,6 @@ transplant =
 [alias]
 # misc
 cm = commit --message
-up = update --check
 . = summary
 : = status
 h = help
