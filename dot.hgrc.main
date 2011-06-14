@@ -43,6 +43,7 @@ unmark = resolve -u
 # pull & push
 pr = pull --rebase
 nudge = push --rev .
+push = ! echo "should use 'hg nudge'"
 
 # shelve
 sh = shelve
