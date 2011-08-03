@@ -3,12 +3,14 @@
 
 [ui]
 username = Takumi IINO <trot.thunder@gmail.com>
+#merge = araxis
 
 [extensions]
 bookmarks =
 color =
 convert =
 eol =
+extdiff =
 fetch =
 graphlog =
 hgshelve = $HOME/src/hgshelve/hgshelve.py
@@ -62,5 +64,18 @@ qf = qfinish
 attend = annotate, cat, diff, export, glog, log, qdiff, help
 
 [hooks]
-prechangegroup.mq-no-pull = ! hg qtop > /dev/null 2>&1
-preoutgoing.mq-no-push = ! hg qtop > /dev/null 2>&1
+#prechangegroup.mq-no-pull = ! hg qtop > /dev/null 2>&1
+#preoutgoing.mq-no-push = ! hg qtop > /dev/null 2>&1
+
+[extdiff]
+cmd.araxisdiff = bash
+opts.araxisdiff = -c '"/cygdrive/C/Program Files/Araxis/Araxis Merge/ConsoleCompare.exe" /2 /wait "$(cygpath -w "$0")" "$(cygpath -w "$1")"'
+
+[merge-tools]
+araxis.premerge = False
+araxis.executable = bash
+araxis.args = -c '"/cygdrive/C/Program Files/Araxis/Araxis Merge/ConsoleCompare.exe" /3 /a2 /wait /title1:"Other" /title2:"Base" /title3:"Local:$(cygpath -w "$0")" "$(cygpath -w "$1")" "$(cygpath -w "$2")" "$(cygpath -w "$0")" "$(cygpath -w "$3")"' $local $other $base $output
+araxis.checkconflict = True
+araxis.binary = True
+#araxis.gui = True
+
