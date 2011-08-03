@@ -48,3 +48,6 @@ darwin*)
     alias portsearch="sudo port search"
     ;;
 esac
+
+# editor
+alias es="emacsclient"
