@@ -17,6 +17,7 @@ hgshelve = $HOME/src/hgshelve/hgshelve.py
 mq =
 pager =
 parentrevspec =
+progress =
 rebase =
 record =
 transplant =
